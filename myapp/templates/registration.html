@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Регистрация шеф-повара - RecipesHub
+{% endblock %}
+
+{% block content %}
+    {% load static %}
+    <div class="info_page">
+    <img src="{% static 'images/chef.jpg' %}" class="registration_img">
+        <div class="info_page_text">
+            <h1>Регистрация шеф-повара</h1>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

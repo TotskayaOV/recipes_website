@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Добавление продукта к рецепту "{{ post.title }}"</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ product_quantity_form.as_p }}
+        <button type="submit" name="add_product">Добавить еще один продукт</button>
+        <button type="submit" name="add_steps">Перейти к описанию шагов</button>
+    </form>
+{% endblock %}

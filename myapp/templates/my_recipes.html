@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Рецепты от шеф повара {{ chef_posts.first.chef_id.username }}</h1>
+    {% for post in chef_posts %}
+        <div class="info_page_text">
+            <h3><a href="{% url 'recipe_details' post.id %}">{{ post.name }}</a></h3>
+            <p>{{ post.description }}</p>
+            <a href="{% url 'edit_recipe' post.id %}">Редактировать рецепт</a>
+        </div>
+    {% endfor %}
+{% endblock %}

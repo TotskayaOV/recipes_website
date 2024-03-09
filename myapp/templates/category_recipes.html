@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+    
+    <h2>Рецепты в этой категории:</h2>
+    <div class="info_page_text">
+        <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <h3><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h3>
+                    <p>{{ recipe.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

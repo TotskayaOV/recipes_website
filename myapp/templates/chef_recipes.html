@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Recipes by {{ chef_posts.first.chef_id.username }}</h1>
+    {% for post in chef_posts %}
+        <h2>{{ post.name }}</h2>
+        <p>{{ post.description }}</p>
+        <h3>Ingredients:</h3>
+        <ul>
+            {% for product_quantity in post.productquantity_set.all %}
+                <li>{{ product_quantity.count }} {{ product_quantity.get_measurement_display }} of {{ product_quantity.product_id.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Cooking Steps:</h3>
+        <ol>
+            {% for step in post.cookingstep_set.all %}
+                <li>{{ step.description }}</li>
+            {% endfor %}
+        </ol>
+    {% endfor %}
+{% endblock %}

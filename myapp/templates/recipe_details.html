@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="info_page">
+        {% if recipe.images %}
+            <img src="{{ recipe.images.url }}" alt="{{ recipe.name }}" class="recipe_img">
+        {% endif %}
+        <div class="info_page_text">
+            <h1>{{ recipe.name }}</h1>
+            <p>{{ recipe.description }}</p>
+        </div>
+    </div>
+    <div class="description_text">
+    <p>Ингредиенты:<br>
+    {% for product_quantity in product_quantities %}
+        - {{ product_quantity.product_id.name }}: {{ product_quantity.count }} {{ product_quantity.get_measurement_display }}<br>
+    {% endfor %}</p>
+
+    <h2>Шаги приготовления:</h2>
+    <ul>
+        {% for step in cooking_steps %}
+            <li class="description_list">
+                <h3>Шаг {{ forloop.counter }}</h3>
+                <p>{{ step.description }}</p>
+                {% if step.images %}
+                    <img src="{{ step.images.url }}" alt="Step {{ forloop.counter }}">
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if user.is_authenticated and user.id == recipe.chef_id %}
+        <a href="{% url 'edit_recipe' recipe.id %}">Редактировать рецепт</a>
+    {% endif %}
+    </div>
+{% endblock %}
+
