@@ -40,7 +40,7 @@ class Post(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     cooking_time = models.DecimalField(max_digits=10, decimal_places=2)
-    images = models.ImageField(upload_to='dish_images/', null=True, blank=True)
+    images = models.ImageField(upload_to='media/', null=True, blank=True)
     register_date = models.DateTimeField(auto_now=True)
     chef_id = models.ForeignKey(Chef, on_delete=models.SET('Анонимный шеф-повар'))
     category_id = models.ForeignKey(Category, on_delete=models.SET('Вне категорий'))
