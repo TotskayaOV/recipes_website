@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="info_page">
+        {% if recipe.images %}
+            <img src="{{ recipe.images.url }}" alt="{{ recipe.name }}" class="recipe_img">
+        {% endif %}
+        <div class="info_page_text">
+            <h1>{{ recipe.name }}</h1>
+            <p>{{ recipe.description }}</p>
+        </div>
+    </div>
+    <div class="description_text">
+        <h2>Ингредиенты:</h2>
+        <ul>
+            {% for product_quantity in products %}
+                <li>{{ product_quantity.product_id.name }}: {{ product_quantity.count }} {{ product_quantity.get_measurement_display }}</li>
+            {% endfor %}
+        </ul>
+        
+        <h2>Шаги приготовления:</h2>
+        <ol>
+            {% for step in steps %}
+                <li>
+                    <h3>Шаг {{ forloop.counter }}</h3>
+                    <p>{{ step.description }}</p>
+                    {% if step.images %}
+                        <img src="{{ step.images.url }}" alt="Step {{ forloop.counter }}">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+        
+        {% if user.is_authenticated and user.id == recipe.chef_id.id %}
+            <h3>Добавить продукт:</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ product_quantity_form.as_p }}
+                <button type="submit">Добавить продукт</button>
+            </form>
+            
+            <h3>Добавить шаг приготовления:</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ cooking_step_form.as_p }}
+                <button type="submit">Добавить шаг</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

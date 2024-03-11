@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Все рецепты</h1>
+    {% for post in all_posts %}
+        <div class="info_page_text">
+            <h3><a href="{% url 'recipe_details' post.id %}">{{ post.name }}</a></h3>
+            <p>{{ post.description }}</p>
+            {% if user.is_authenticated and user.id == post.chef_id.id %}
+                <a href="{% url 'edit_recipe' post.id %}">Редактировать рецепт</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

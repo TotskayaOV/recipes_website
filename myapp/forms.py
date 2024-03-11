@@ -9,7 +9,7 @@ class ChefRegistrationForm(forms.ModelForm):
         labels = {'username': 'Логин',
                   'nick_name': 'Имя',
                   'password': 'пароль',
-                  'email': 'эектронная почта',
+                  'email': 'электронная почта',
                   'phone': 'телефон',
                   'about_me': 'расскажите о себе'}
         exclude = ['last_login']
@@ -19,12 +19,11 @@ class ChefRegistrationForm(forms.ModelForm):
     nick_name = forms.CharField(label='Подпись', max_length=20, required=True,
                                 widget=forms.TextInput(attrs={'placeholder': 'укажите ваше имя'}))
 
-    # Добавим кастомизацию полей формы при необходимости, например, для пароля
     password = forms.CharField(widget=forms.PasswordInput())
 
     def save(self, commit=True):
         user = super(ChefRegistrationForm, self).save(commit=False)
-        user.last_login = None  # Устанавливаем значение last_login
+        user.last_login = None
         if commit:
             user.save()
         return user

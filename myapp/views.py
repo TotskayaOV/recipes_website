@@ -8,18 +8,20 @@ from .forms import ChefRegistrationForm, PostForm, ProductForm, ProductQuantityF
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-
+from random import sample
 from django.utils import timezone
 
 default_value = timezone.now
 
 
 def home(request):
+    recipes = Post.objects.all()
+    random_recipes = sample(list(recipes), min(len(recipes), 5))  # Выбираем 5 случайных рецептов или меньше, если их меньше 5
     text_html = """
     <h1>Добро пожаловать на сайт!</h1>
     <p>Здесь собраны рецепты из простых продуктов, которые обычно входят в диетическое питание.</p>
     """
-    return render(request, 'index.html', {'content': text_html})
+    return render(request, 'index.html', {'content': text_html, 'random_recipes': random_recipes})
 
 
 def category_list(request):
@@ -110,7 +112,7 @@ def add_steps_to_recipe(request, post_id):
             cooking_step.save()
             if "add_product" in request.POST:
                 return redirect('add_steps_to_recipe',
-                            post_id=post_id)  # Перенаправление на ту же форму для добавления следующего шага
+                            post_id=post_id)
             elif "add_steps" in request.POST:
                 return redirect('/')
     else:
@@ -118,17 +120,37 @@ def add_steps_to_recipe(request, post_id):
     return render(request, 'add_steps_to_recipe.html', {'cooking_step_form': cooking_step_form})
 
 
-@login_required
-def edit_recipe(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        form = EditPostForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('recipe_details', recipe_id=post_id)
+# @login_required
+# def edit_recipe(request, post_id):
+#     post = get_object_or_404(Post, id=post_id)
+#     if request.method == 'POST':
+#         form = EditPostForm(request.POST, request.FILES, instance=post)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('recipe_details', recipe_id=post_id)
+#     else:
+#         form = EditPostForm(instance=post)
+#     return render(request, 'edit_recipe.html', {'form': form, 'post': post})
+
+def edit_recipe(request, recipe_id):
+    recipe = get_object_or_404(Post, id=recipe_id)
+    form = None
+    if request.user == recipe.chef_id:
+        print(1)
+        if request.method == 'POST':
+            print(2)
+            form = EditPostForm(request.POST, request.FILES, instance=recipe)
+            if form.is_valid():
+                print(3)
+                form.save()
+                return redirect('recipe_detail',
+                                recipe_id=recipe_id)  # Предполагая, что у вас есть view для деталей рецепта
+        else:
+            form = EditPostForm(instance=recipe)
     else:
-        form = EditPostForm(instance=post)
-    return render(request, 'edit_recipe.html', {'form': form, 'post': post})
+        return HttpResponse('У вас нет прав для редактирования этого рецепта.')
+
+    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
 
 
 def chef_recipes(request, chef_id):
@@ -141,15 +163,49 @@ def my_recipes(request):
     chef_posts = Post.objects.filter(chef_id=current_user.id)
     return render(request, 'my_recipes.html', {'chef_posts': chef_posts})
 
+def all_recipes(request):
+    all_posts = Post.objects.all()
+    return render(request, 'all_recipes.html', {'all_posts': all_posts})
 
-def edit_recipe(request, recipe_id):
+
+@login_required
+def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(Post, id=recipe_id)
-    if request.user == recipe.chef_id:
-        if request.method == 'POST':
-            pass
-        else:
-            form = EditPostForm(instance=recipe)
-        return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
-    else:
-        return HttpResponse('У вас нет прав для редактирования этого рецепта.')
+
+    # Получаем все продукты и шаги, связанные с данным рецептом
+    products = ProductQuantity.objects.filter(post_id=recipe)
+    steps = CookingStep.objects.filter(post_id=recipe)
+
+    if request.method == 'POST':
+        # Обработка формы продуктов
+        product_quantity_form = ProductQuantityForm(request.POST)
+        if product_quantity_form.is_valid():
+            product_quantity = product_quantity_form.save(commit=False)
+            product_name = request.POST.get('product_id')
+            try:
+                product = Product.objects.get(name=product_name)
+            except Product.DoesNotExist:
+                product_quantity_form.add_error('product_id', 'Выберите существующий продукт из списка.')
+                return render(request, 'recipe_detail.html', {'recipe': recipe, 'products': products, 'steps': steps,
+                                                              'product_quantity_form': product_quantity_form})
+            product_quantity.product_id = product
+            product_quantity.post_id = recipe
+            product_quantity.save()
+
+        # Обработка формы шагов
+        cooking_step_form = CookingStepForm(request.POST, request.FILES)
+        if cooking_step_form.is_valid():
+            cooking_step = cooking_step_form.save(commit=False)
+            cooking_step.post_id = recipe
+            cooking_step.save()
+
+        return redirect('recipe_detail', recipe_id=recipe_id)  # Перенаправляем на страницу с обновленными данными
+
+    # Если это GET запрос, просто отображаем данные
+    product_quantity_form = ProductQuantityForm()
+    cooking_step_form = CookingStepForm()
+
+    return render(request, 'recipe_detail.html', {'recipe': recipe, 'products': products, 'steps': steps,
+                                                  'product_quantity_form': product_quantity_form,
+                                                  'cooking_step_form': cooking_step_form})
 

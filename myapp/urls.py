@@ -17,6 +17,8 @@ urlpatterns =[
     path('add_steps_to_recipe/<int:post_id>/', views.add_steps_to_recipe, name='add_steps_to_recipe'),
     path('chef_recipes/<int:chef_id>/', views.chef_recipes, name='chef_recipes'),
     path('my_recipes/', views.my_recipes, name='my_recipes'),
+    path('all_recipes/', views.all_recipes, name='all_recipes'),
     path('edit_recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
+    path('recipe_detail/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
 ]
 
