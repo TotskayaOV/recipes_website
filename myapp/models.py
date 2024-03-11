@@ -12,13 +12,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='chef',
             name='username',
-            field=models.CharField(max_length=10, unique=True, null=True, default=None),
+            field=models.CharField(max_length=10, unique=True, null=True),
         ),
     ]
 
 
+
 class Chef(AbstractUser):
-    username = models.CharField(max_length=10, unique=True, null=True, default=None)
+    username = models.CharField(max_length=10, unique=True, null=True)
     nick_name = models.CharField(max_length=20, default=username)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
