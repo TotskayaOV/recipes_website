@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
 
 
 class Chef(AbstractUser):
-    username = models.CharField(max_length=10, unique=True, null=True)
+    username = models.CharField(max_length=10, unique=True)
     nick_name = models.CharField(max_length=20, default=username)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
