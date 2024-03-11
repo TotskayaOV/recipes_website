@@ -1,15 +1,27 @@
 from django.db import migrations, models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+import uuid
 
 
 class Chef(AbstractUser):
-    username = models.CharField(max_length=10, unique=True)
-    nick_name = models.CharField(max_length=20, default=username)
-    email = models.EmailField()
+    username = models.CharField(max_length=20, unique=True)
+    nick_name = models.CharField(max_length=20)
+    email = models.EmailField(unique=True)
     phone = models.CharField(max_length=11)
     about_me = models.TextField()
     register_date = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = 'username'
+
+    def generate_unique_username(self):
+        current_time = timezone.now().strftime('%Y%m%d%H%M%S')
+        random_uuid = str(uuid.uuid4().hex)[:5]
+        self.username = f'user_{current_time}_{random_uuid}'
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.generate_unique_username()
+        super().save(*args, **kwargs)
 
 
 class Product(models.Model):
