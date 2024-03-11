@@ -2,24 +2,8 @@ from django.db import migrations, models
 from django.contrib.auth.models import AbstractUser
 
 
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('my_app', 'previous_migration_number'),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name='chef',
-            name='username',
-            field=models.CharField(max_length=10, unique=True, default='unique_default'),
-        ),
-    ]
-
-
-
 class Chef(AbstractUser):
-    username = models.CharField(max_length=10, unique=True, default='unique_default')
+    username = models.CharField(max_length=10)
     nick_name = models.CharField(max_length=20, default=username)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
