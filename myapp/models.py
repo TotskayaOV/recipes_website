@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Chef(AbstractUser):
-    username = models.CharField(max_length=10, unique=True, default='default_user')
+    username = models.CharField(max_length=10, unique=True, null=True)
     nick_name = models.CharField(max_length=20, default=username)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
