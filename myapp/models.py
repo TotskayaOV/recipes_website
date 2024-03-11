@@ -1,6 +1,8 @@
 from django.db import migrations, models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 import uuid
 
 
@@ -13,15 +15,12 @@ class Chef(AbstractUser):
     register_date = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = 'username'
 
-    def generate_unique_username(self):
+@receiver(pre_save, sender=Chef)
+def generate_unique_username(sender, instance, **kwargs):
+    if not instance.username:
         current_time = timezone.now().strftime('%Y%m%d%H%M%S')
         random_uuid = str(uuid.uuid4().hex)[:5]
-        self.username = f'user_{current_time}_{random_uuid}'
-
-    def save(self, *args, **kwargs):
-        if not self.username:
-            self.generate_unique_username()
-        super().save(*args, **kwargs)
+        instance.username = f'user_{current_time}_{random_uuid}'
 
 
 class Product(models.Model):
