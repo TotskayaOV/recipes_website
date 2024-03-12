@@ -120,16 +120,17 @@ ul {
 }
 
 @media screen and (max-width: 1439px) {
-    .header{
-        padding: 5px;
-    }
 
-    .header_block_menu_item {
-        font-size: 12px;
-    }
+.header{
+    padding: 5px;
+}
 
-    .no_mobile{
-        display: none;
-    }
+.header_block_menu_item {
+    font-size: 12px;
+}
+
+.no_mobile{
+    display: none;
+}
 
 }
