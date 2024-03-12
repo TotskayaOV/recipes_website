@@ -118,3 +118,18 @@ ul {
     align-items: center;
     padding: 10px;
 }
+
+@media screen and (max-width: 767px){
+    .header{
+        padding: 5px;
+    }
+
+    .header_block_menu_item {
+        font-size: 12px;
+    }
+
+    .no_mobile{
+        display: none;
+    }
+
+}

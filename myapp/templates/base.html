@@ -13,10 +13,10 @@
     <header class="header">
                 <a href="{% url 'home' %}" class="header_block_menu_item">Главная</a>
                 <a href="{% url 'category_list' %}" class="header_block_menu_item">Категории</a>
-                <a href="{% url 'all_recipes' %}" class="header_block_menu_item">Все рецепты</a>
+                <a href="{% url 'all_recipes' %}" class="header_block_menu_item no_mobile">Все рецепты</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'add_recipe' %}" class="header_block_menu_item">Добавить рецепт</a>
-                    <a href="{% url 'my_recipes' %}" class="header_block_menu_item">Мои рецепты</a>
+                    <a href="{% url 'my_recipes' %}" class="header_block_menu_item no_mobile">Мои рецепты</a>
                    <form action="{% url 'logout' %}" method="post">
                        {% csrf_token %}
                        <button type="submit" class="header_block_menu_button">Выход</button>
