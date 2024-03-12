@@ -137,11 +137,10 @@ ul {
 }
 .no_mobile{
     display: none;
-}
+}}
 
 @media screen and (max-width: 767px){
    .no_mobile{
     display: none;
-}
 }
 }
