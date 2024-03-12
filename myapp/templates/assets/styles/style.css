@@ -129,11 +129,12 @@ ul {
     font-size: 12px;
 }
 
-.no_mobile{
-    display: none;
-}
+
 .header_block_menu_button{
     font-size: 12px;
     width: 100px;
+}
+.no_mobile{
+    display: none;
 }
 }
