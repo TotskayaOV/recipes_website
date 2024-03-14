@@ -48,7 +48,7 @@ def register_chef(request):
         form = ChefRegistrationForm(request.POST)
         if form.is_valid():
             user_data = form.cleaned_data
-            new_user = User.objects.create_user(
+            new_user = Chef.objects.create_user(
                 username=user_data['username'],
                 email=user_data['email'],
                 password=make_password(user_data['password'])
